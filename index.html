@@ -17,25 +17,14 @@
   --cinza:#f2f2f2;
   --borda:#ddd;
   --ok:#0a8f3c;
+  --danger:#b00020;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Segoe UI,Arial,sans-serif;
-  background:var(--cinza);
-}
-header{
-  background:var(--preto);
-  color:#fff;
-  padding:14px;
-}
+body{margin:0;font-family:Segoe UI,Arial;background:var(--cinza)}
+header{background:var(--preto);color:#fff;padding:14px}
 header span{color:var(--laranja)}
 
-.container{
-  padding:12px;
-  max-width:1100px;
-  margin:auto;
-}
+.container{padding:12px;max-width:1100px;margin:auto}
 
 /* DASHBOARD */
 .dashboard{
@@ -85,28 +74,14 @@ button{
 }
 .btn-main{background:var(--laranja);color:#fff;width:100%}
 .btn-dark{background:var(--preto);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
 .btn-small{font-size:12px;margin:2px}
 
 /* TABELA */
-.table-wrap{
-  overflow-x:auto;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:520px;
-}
-th{
-  background:var(--preto);
-  color:#fff;
-  padding:8px;
-  font-size:12px;
-}
-td{
-  padding:8px;
-  border-bottom:1px solid var(--borda);
-  font-size:12px;
-}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th{background:var(--preto);color:#fff;padding:8px;font-size:12px}
+td{padding:8px;border-bottom:1px solid var(--borda);font-size:12px}
 
 .badge{
   padding:4px 8px;
@@ -118,12 +93,7 @@ td{
 .Em\ rota{background:#ffe0c2;color:#b34700}
 .Entregue{background:#d4f7d4;color:#006400}
 
-.footer{
-  background:#fff;
-  border-radius:8px;
-  padding:12px;
-  font-weight:700;
-}
+.footer{background:#fff;border-radius:8px;padding:12px;font-weight:700}
 </style>
 </head>
 
@@ -221,20 +191,24 @@ function addPedido(){
   salvar();render();
 }
 
-/* WHATSAPP */
+/* ✅ WHATSAPP BUSINESS FORÇADO */
 function abrirWhats(p,tipo){
-  let msg=tipo==="rota"
+  let msg = tipo==="rota"
     ?`Olá ${p.cliente}! 👋 Seu pedido saiu para entrega 🚴‍♂️`
     :`Olá ${p.cliente}! 😊 Seu pedido foi entregue com sucesso ✅ Obrigado 🧡`;
 
-  const texto=encodeURIComponent(msg);
-  const tel=`55${p.telefone}`;
-  const isMobile=/Android|iPhone|iPad/i.test(navigator.userAgent);
+  const texto = encodeURIComponent(msg);
+  const tel = `55${p.telefone}`;
+  const isMobile = /Android/i.test(navigator.userAgent);
 
   if(isMobile){
-    window.location.href=`whatsapp://send?phone=${tel}&text=${texto}`;
+    // FORÇA WHATSAPP BUSINESS
+    window.location.href =
+      `intent://send/?phone=${tel}&text=${texto}` +
+      `#Intent;scheme=whatsapp;package=com.whatsapp.w4b;end`;
   }else{
-    window.location.href=`https://web.whatsapp.com/send?phone=${tel}&text=${texto}`;
+    window.location.href =
+      `https://web.whatsapp.com/send?phone=${tel}&text=${texto}`;
   }
 }
 
@@ -246,6 +220,14 @@ function mudarStatus(i,status){
   salvar();render();
   if(status==="Em rota")abrirWhats(p,"rota");
   if(status==="Entregue")abrirWhats(p,"entregue");
+}
+
+function excluirPedido(i){
+  if(!confirm("Excluir este pedido?")) return;
+  let hojePedidos=pedidos.filter(p=>p.data===hoje());
+  let p=hojePedidos[i];
+  pedidos.splice(pedidos.indexOf(p),1);
+  salvar();render();
 }
 
 function render(){
@@ -265,6 +247,7 @@ function render(){
         <td>
           <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Em rota')">Em rota 📲</button>
           <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Entregue')">Entregue 📲</button>
+          <button class="btn-small btn-danger" onclick="excluirPedido(${i})">Excluir</button>
         </td>
       </tr>`;
   });
