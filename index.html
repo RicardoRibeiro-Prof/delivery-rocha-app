@@ -1,213 +1,96 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+
+<!-- PWA / MOBILE -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.json">
+
 <title>Delivery | Drogaria Rocha</title>
 
 <style>
 :root{
   --laranja:#ff6a00;
   --preto:#111;
-  --branco:#fff;
   --cinza:#f2f2f2;
   --borda:#ddd;
   --ok:#0a8f3c;
   --danger:#b00020;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Segoe UI, Arial, sans-serif;
-  background:var(--cinza);
-}
-header{
-  background:var(--preto);
-  color:var(--branco);
-  padding:16px 24px;
-}
-header .brand{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  gap:12px;
-  flex-wrap:wrap;
-}
-header h2{margin:0}
-header h2 span{color:var(--laranja)}
-header small{opacity:.9}
+body{margin:0;font-family:Segoe UI,Arial;background:var(--cinza)}
+header{background:var(--preto);color:#fff;padding:14px}
+header span{color:var(--laranja)}
+.wrap{padding:14px;display:grid;grid-template-columns:1fr;gap:14px}
 
-.wrap{
-  padding:20px;
-  display:grid;
-  grid-template-columns:360px 1fr;
-  gap:20px;
-}
+.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kpi{background:#fff;border-radius:10px;padding:10px;text-align:center;font-weight:800}
+.kpi small{display:block;font-weight:600;color:#666}
 
-.card{
-  background:var(--branco);
-  border-radius:10px;
-  padding:16px;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
-}
-.card h3{
-  margin:0 0 12px;
-  border-left:4px solid var(--laranja);
-  padding-left:10px;
-}
-
-.dashboard{
-  grid-column:1 / -1;
-  display:grid;
-  grid-template-columns:repeat(6, 1fr);
-  gap:12px;
-}
-.kpi{
-  background:var(--branco);
-  border-radius:10px;
-  padding:12px;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
-  text-align:center;
-}
-.kpi h4{margin:0;font-size:12px;color:#666}
-.kpi div{margin-top:6px;font-size:20px;font-weight:800;color:var(--preto)}
+.card{background:#fff;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.card h3{margin:0 0 10px;border-left:4px solid var(--laranja);padding-left:8px}
 
 label{font-size:12px;font-weight:700;color:#555}
-input, select{
-  width:100%;
-  padding:9px;
-  margin:6px 0 10px;
-  border:1px solid var(--borda);
-  border-radius:6px;
-  font-size:14px;
-}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input{width:100%;padding:9px;margin:6px 0 10px;border:1px solid var(--borda);border-radius:6px}
 
-button{
-  border:none;
-  border-radius:6px;
-  padding:9px 10px;
-  font-weight:800;
-  cursor:pointer;
-}
+button{border:none;border-radius:6px;padding:9px;font-weight:800;cursor:pointer}
 .btn-main{background:var(--laranja);color:#fff;width:100%}
 .btn-dark{background:var(--preto);color:#fff}
-.btn-ok{background:var(--ok);color:#fff}
 .btn-danger{background:var(--danger);color:#fff}
-.btn-small{font-size:12px;padding:6px 8px;margin:2px;border-radius:6px}
-.muted{opacity:.7;font-size:12px}
+.btn-small{font-size:12px;margin:2px}
 
 table{width:100%;border-collapse:collapse}
-th{
-  background:var(--preto);
-  color:#fff;
-  padding:10px;
-  font-size:13px;
-  text-align:left;
-}
-td{
-  padding:10px;
-  border-bottom:1px solid var(--borda);
-  font-size:13px;
-  vertical-align:top;
-}
+th{background:var(--preto);color:#fff;padding:8px;font-size:12px}
+td{padding:8px;border-bottom:1px solid var(--borda);font-size:12px}
 
-.badge{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:800;
-}
+.badge{padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}
 .Aguardando{background:#eee}
 .Em\ rota{background:#ffe0c2;color:#b34700}
 .Entregue{background:#d4f7d4;color:#006400}
-.Cancelado{background:#ffd6d6;color:#8b0000}
 
-.footer{
-  margin:0 20px 20px;
-  background:#fff;
-  border-radius:10px;
-  padding:12px;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
-  font-weight:800;
-}
-
-hr{border:none;border-top:1px solid #eee;margin:12px 0}
-.notice{
-  background:#fff7ed;
-  border:1px solid #ffd7b8;
-  padding:10px;
-  border-radius:8px;
-  font-size:12px;
-  color:#7a3a00;
-}
+.footer{background:#fff;border-radius:10px;padding:12px;font-weight:800}
 </style>
 </head>
 
 <body>
+
 <header>
-  <div class="brand">
-    <div>
-      <h2>Controle de Delivery — <span>Drogaria Rocha</span></h2>
-      <small>Fortalecendo sua saúde e seu bem-estar</small>
-    </div>
-    <div class="muted" id="diaStatusLabel"></div>
-  </div>
+  <h3>Delivery — <span>Drogaria Rocha</span></h3>
 </header>
 
 <div class="wrap">
 
-  <!-- DASHBOARD -->
   <div class="dashboard">
-    <div class="kpi"><h4>Pedidos</h4><div id="kPedidos">0</div></div>
-    <div class="kpi"><h4>Total (R$)</h4><div id="kTotal">0,00</div></div>
-    <div class="kpi"><h4>Aguardando</h4><div id="kAg">0</div></div>
-    <div class="kpi"><h4>Em rota</h4><div id="kRota">0</div></div>
-    <div class="kpi"><h4>Entregues</h4><div id="kEnt">0</div></div>
-    <div class="kpi"><h4>Cancelados</h4><div id="kCan">0</div></div>
+    <div class="kpi"><small>Pedidos</small><div id="kPedidos">0</div></div>
+    <div class="kpi"><small>Total</small><div id="kTotal">0,00</div></div>
+    <div class="kpi"><small>Entregues</small><div id="kEnt">0</div></div>
   </div>
 
-  <!-- FORM -->
   <div class="card">
     <h3>Novo Pedido</h3>
 
-    <div class="notice">
-      Para o WhatsApp abrir: mantenha o <b>WhatsApp Web da loja</b> logado no navegador.
-    </div>
-
-    <label>Data do pedido</label>
-    <input type="date" id="dataPedido" />
+    <label>Data</label>
+    <input type="date" id="dataPedido">
 
     <label>Cliente</label>
-    <input id="cliente" placeholder="Ex.: Maria" />
+    <input id="cliente">
 
-    <label>Telefone do cliente (somente números)</label>
-    <input id="telefone" placeholder="Ex.: 89999999999" />
+    <label>Telefone (somente números)</label>
+    <input id="telefone">
 
     <label>Pedido</label>
-    <input id="pedido" placeholder="Ex.: Dipirona + Vitamina C" />
+    <input id="pedido">
 
-    <label>Valor (R$)</label>
-    <input id="valor" placeholder="Ex.: 35,90" />
+    <label>Valor</label>
+    <input id="valor">
 
     <button class="btn-main" onclick="addPedido()">Adicionar Pedido</button>
-
-    <hr>
-
-    <div class="row">
-      <button class="btn-ok" onclick="abrirDia()">Abrir Dia</button>
-      <button class="btn-danger" onclick="fecharDia()">Fechar Dia</button>
-    </div>
-
-    <div class="muted" style="margin-top:10px">
-      Fechar Dia arquiva os pedidos de hoje, baixa o fechamento e zera a tela do dia.
-    </div>
   </div>
 
-  <!-- LISTA -->
   <div class="card">
-    <h3>Pedidos do Dia (hoje)</h3>
+    <h3>Pedidos de Hoje</h3>
     <table>
       <thead>
         <tr>
@@ -222,441 +105,97 @@ hr{border:none;border-top:1px solid #eee;margin:12px 0}
     </table>
   </div>
 
-  <!-- RELATÓRIOS -->
-  <div class="card" style="grid-column:1/-1">
-    <h3>Relatórios</h3>
-
-    <div class="row">
-      <div>
-        <label>Relatório por período (início)</label>
-        <input type="date" id="repIni" />
-      </div>
-      <div>
-        <label>Relatório por período (fim)</label>
-        <input type="date" id="repFim" />
-      </div>
-    </div>
-    <button class="btn-dark" onclick="relatorioPeriodo()">Baixar relatório por período</button>
-
-    <hr>
-
-    <div class="row">
-      <div>
-        <label>Mês</label>
-        <select id="repMes">
-          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
-          <option value="03">Março</option><option value="04">Abril</option>
-          <option value="05">Maio</option><option value="06">Junho</option>
-          <option value="07">Julho</option><option value="08">Agosto</option>
-          <option value="09">Setembro</option><option value="10">Outubro</option>
-          <option value="11">Novembro</option><option value="12">Dezembro</option>
-        </select>
-      </div>
-      <div>
-        <label>Ano</label>
-        <input id="repAno" placeholder="2025" />
-      </div>
-    </div>
-    <button class="btn-dark" onclick="relatorioMensal()">Baixar relatório mensal</button>
-
-    <div class="muted" style="margin-top:10px">
-      Relatórios incluem pedidos arquivados (fechados) e não arquivados.
-    </div>
-  </div>
+  <div class="footer" id="resumo"></div>
 
 </div>
 
-<div class="footer" id="resumo"></div>
-
 <script>
-/* =========================
-   STORAGE / ESTADO
-========================= */
-const STORAGE_ORDERS = "rocha_orders_v1";
-const STORAGE_DAY_STATUS = "rocha_day_status_v1";      // aberto/fechado por data (map)
-const STORAGE_CLOSINGS = "rocha_closings_v1";          // lista de fechamentos
-
-let orders = loadJSON(STORAGE_ORDERS, []);
-let dayStatus = loadJSON(STORAGE_DAY_STATUS, {});      // { "YYYY-MM-DD": "aberto" | "fechado" }
-let closings = loadJSON(STORAGE_CLOSINGS, []);         // [{date, totals, counts, createdAt}]
-
-function loadJSON(key, fallback){
-  try{
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  }catch{
-    return fallback;
-  }
-}
-function saveAll(){
-  localStorage.setItem(STORAGE_ORDERS, JSON.stringify(orders));
-  localStorage.setItem(STORAGE_DAY_STATUS, JSON.stringify(dayStatus));
-  localStorage.setItem(STORAGE_CLOSINGS, JSON.stringify(closings));
+/* SERVICE WORKER */
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("service-worker.js");
 }
 
-/* =========================
-   HELPERS
-========================= */
-function todayISO(){
-  return new Date().toISOString().split("T")[0];
-}
-function fmtMoney(n){
-  return (Number(n) || 0).toFixed(2).replace(".", ",");
-}
-function parseMoney(str){
-  const v = String(str || "").trim().replace(/\./g,"").replace(",",".");
-  const n = Number(v);
-  return Number.isFinite(n) ? n : NaN;
-}
-function onlyDigits(s){
-  return String(s || "").replace(/\D/g,"");
-}
-function isTodayClosed(){
-  const d = todayISO();
-  return (dayStatus[d] || "aberto") === "fechado";
-}
-function setTodayStatus(status){
-  dayStatus[todayISO()] = status;
-  saveAll();
-}
+/* DADOS */
+const STORAGE="rocha_delivery_final";
+let pedidos=JSON.parse(localStorage.getItem(STORAGE))||[];
 
-/* =========================
-   FILTROS
-========================= */
-// Operacional: somente pedidos de HOJE e NÃO arquivados
-function getTodayOperational(){
-  const d = todayISO();
-  return orders.filter(o => o.date === d && !o.archived);
-}
-// Para relatórios: tudo (arquivado e não arquivado)
-function getOrdersBetween(ini, fim){
-  return orders.filter(o => o.date >= ini && o.date <= fim);
-}
-function getOrdersByMonthYear(mm, yyyy){
-  const prefix = `${yyyy}-${mm}`;
-  return orders.filter(o => o.date.startsWith(prefix));
-}
+function hoje(){return new Date().toISOString().split("T")[0]}
+dataPedido.value=hoje();
 
-/* =========================
-   WHATSAPP
-========================= */
-function openWhats(order, type){
-  const phone = order.phone;
-  if(!phone || phone.length < 10){
-    alert("Telefone do cliente inválido.");
-    return;
-  }
+function salvar(){localStorage.setItem(STORAGE,JSON.stringify(pedidos))}
 
-  let msg = "";
-  if(type === "rota"){
-    msg = `Olá, ${order.customer}! 👋
-Seu pedido da Drogaria Rocha já saiu para entrega 🚴‍♂️
-Em breve chegaremos até você.`;
-  }else if(type === "entregue"){
-    msg = `Olá, ${order.customer}! 😊
-Seu pedido da Drogaria Rocha foi entregue com sucesso ✅
-
-Obrigado pela confiança 🧡
-`;
-  }
-
-  const url = `https://web.whatsapp.com/send?phone=55${phone}&text=${encodeURIComponent(msg)}`;
-
-  // Nova aba (mais compatível com políticas do navegador)
-  window.open(url, "_blank");
-}
-
-/* =========================
-   AÇÕES DO DIA
-========================= */
-function abrirDia(){
-  setTodayStatus("aberto");
-  render();
-}
-
-function fecharDia(){
-  if(isTodayClosed()){
-    alert("O dia já está fechado.");
-    return;
-  }
-
-  const ops = getTodayOperational();
-  if(ops.length === 0){
-    alert("Não há pedidos hoje para fechar.");
-    return;
-  }
-
-  // Totais e contagens
-  let total = 0;
-  let ag=0, rota=0, ent=0, can=0;
-
-  ops.forEach(o=>{
-    total += o.amount;
-    if(o.status === "Aguardando") ag++;
-    if(o.status === "Em rota") rota++;
-    if(o.status === "Entregue") ent++;
-    if(o.status === "Cancelado") can++;
-  });
-
-  // Arquiva os pedidos operacionais do dia (zera a tela)
-  const today = todayISO();
-  orders = orders.map(o => {
-    if(o.date === today && !o.archived) return {...o, archived:true};
-    return o;
-  });
-
-  // Salva fechamento (histórico)
-  closings.push({
-    date: today,
-    total,
-    counts: { pedidos: ops.length, aguardando: ag, rota, entregue: ent, cancelado: can },
-    createdAt: new Date().toISOString()
-  });
-
-  // Gera arquivo de fechamento
-  let txt = `FECHAMENTO DELIVERY - DROGARIA ROCHA\nData: ${today}\n\n`;
-  ops.forEach(o=>{
-    txt += `${o.customer} | ${o.orderText} | R$ ${fmtMoney(o.amount)} | ${o.status}\n`;
-  });
-  txt += `\nResumo:\n`;
-  txt += `Pedidos: ${ops.length}\nAguardando: ${ag}\nEm rota: ${rota}\nEntregues: ${ent}\nCancelados: ${can}\n`;
-  txt += `\nTOTAL DO DIA: R$ ${fmtMoney(total)}\n`;
-
-  downloadText(`fechamento_${today}.txt`, txt);
-
-  // Fecha o dia
-  setTodayStatus("fechado");
-  saveAll();
-  render();
-}
-
-/* =========================
-   PEDIDOS
-========================= */
 function addPedido(){
-  if(isTodayClosed()){
-    alert("Dia fechado. Clique em 'Abrir Dia' para lançar pedidos.");
+  if(!cliente.value||!telefone.value||!pedido.value||!valor.value){
+    alert("Preencha todos os campos");
     return;
   }
-
-  const date = dataPedido.value || todayISO();
-  const customer = (cliente.value || "").trim();
-  const phone = onlyDigits(telefone.value);
-  const orderText = (pedido.value || "").trim();
-  const amount = parseMoney(valor.value);
-
-  if(!date || !customer || !phone || !orderText || !Number.isFinite(amount)){
-    alert("Preencha: Data, Cliente, Telefone, Pedido e Valor (válido).");
-    return;
-  }
-
-  orders.push({
-    id: cryptoId(),
-    date,
-    customer,
-    phone,
-    orderText,
-    amount,
-    status: "Aguardando",
-    archived: false,
-    createdAt: new Date().toISOString()
+  pedidos.push({
+    data:dataPedido.value,
+    cliente:cliente.value,
+    telefone:telefone.value.replace(/\D/g,""),
+    pedido:pedido.value,
+    valor:parseFloat(valor.value.replace(",",".")),
+    status:"Aguardando"
   });
-
-  // limpa
-  cliente.value = "";
-  telefone.value = "";
-  pedido.value = "";
-  valor.value = "";
-  dataPedido.value = todayISO();
-
-  saveAll();
-  render();
+  cliente.value=telefone.value=pedido.value=valor.value="";
+  salvar();render();
 }
 
-function setStatus(indexToday, status){
-  if(isTodayClosed()){
-    alert("Dia fechado. Não é possível alterar pedidos.");
-    return;
+/* ✅ WHATSAPP APP NO CELULAR */
+function abrirWhats(p,tipo){
+  let msg=tipo==="rota"
+    ?`Olá ${p.cliente}! 👋 Seu pedido saiu para entrega 🚴‍♂️`
+    :`Olá ${p.cliente}! 😊 Seu pedido foi entregue com sucesso ✅ Obrigado 🧡`;
+
+  const texto=encodeURIComponent(msg);
+  const tel=`55${p.telefone}`;
+  const isMobile=/Android|iPhone|iPad/i.test(navigator.userAgent);
+
+  if(isMobile){
+    window.location.href=`whatsapp://send?phone=${tel}&text=${texto}`;
+  }else{
+    window.location.href=`https://web.whatsapp.com/send?phone=${tel}&text=${texto}`;
   }
-
-  const ops = getTodayOperational();
-  const target = ops[indexToday];
-  if(!target) return;
-
-  // atualiza pelo id
-  orders = orders.map(o => o.id === target.id ? {...o, status} : o);
-  saveAll();
-  render();
-
-  // Dispara Whats após atualizar status
-  if(status === "Em rota") openWhats({...target, status}, "rota");
-  if(status === "Entregue") openWhats({...target, status}, "entregue");
 }
 
-function cancelOrder(indexToday){
-  setStatus(indexToday, "Cancelado");
+function mudarStatus(i,status){
+  let hojePedidos=pedidos.filter(p=>p.data===hoje());
+  let p=hojePedidos[i];
+  let idx=pedidos.indexOf(p);
+  pedidos[idx].status=status;
+  salvar();render();
+  if(status==="Em rota")abrirWhats(p,"rota");
+  if(status==="Entregue")abrirWhats(p,"entregue");
 }
 
-function deleteOrder(indexToday){
-  if(isTodayClosed()){
-    alert("Dia fechado. Não é possível excluir pedidos.");
-    return;
-  }
-
-  const ops = getTodayOperational();
-  const target = ops[indexToday];
-  if(!target) return;
-
-  if(!confirm("Excluir este pedido definitivamente?")) return;
-
-  orders = orders.filter(o => o.id !== target.id);
-  saveAll();
-  render();
-}
-
-/* =========================
-   RELATÓRIOS
-========================= */
-function relatorioPeriodo(){
-  const ini = repIni.value;
-  const fim = repFim.value;
-  if(!ini || !fim || ini > fim){
-    alert("Informe um período válido.");
-    return;
-  }
-
-  const list = getOrdersBetween(ini, fim);
-  if(list.length === 0){
-    alert("Nenhum pedido no período.");
-    return;
-  }
-
-  let total = 0;
-  let txt = `RELATÓRIO POR PERÍODO - DROGARIA ROCHA\nPeríodo: ${ini} a ${fim}\n\n`;
-  list.forEach(o=>{
-    total += o.amount;
-    txt += `${o.date} | ${o.customer} | ${o.orderText} | R$ ${fmtMoney(o.amount)} | ${o.status} | ${o.archived ? "FECHADO" : "ABERTO"}\n`;
-  });
-  txt += `\nTOTAL: R$ ${fmtMoney(total)}\n`;
-
-  downloadText(`relatorio_${ini}_a_${fim}.txt`, txt);
-}
-
-function relatorioMensal(){
-  const mm = repMes.value;
-  const yyyy = (repAno.value || "").trim();
-  if(!/^\d{4}$/.test(yyyy)){
-    alert("Informe o ano com 4 dígitos (ex.: 2025).");
-    return;
-  }
-
-  const list = getOrdersByMonthYear(mm, yyyy);
-  if(list.length === 0){
-    alert("Nenhum pedido no mês selecionado.");
-    return;
-  }
-
-  let total = 0;
-  let txt = `RELATÓRIO MENSAL - DROGARIA ROCHA\nMês/Ano: ${mm}/${yyyy}\n\n`;
-  list.forEach(o=>{
-    total += o.amount;
-    txt += `${o.date} | ${o.customer} | ${o.orderText} | R$ ${fmtMoney(o.amount)} | ${o.status} | ${o.archived ? "FECHADO" : "ABERTO"}\n`;
-  });
-  txt += `\nTOTAL DO MÊS: R$ ${fmtMoney(total)}\n`;
-
-  downloadText(`relatorio_${mm}_${yyyy}.txt`, txt);
-}
-
-/* =========================
-   UI / RENDER
-========================= */
 function render(){
-  const closed = isTodayClosed();
-  diaStatusLabel.textContent = `Status do dia (${todayISO()}): ${closed ? "FECHADO" : "ABERTO"}`;
+  let hojePedidos=pedidos.filter(p=>p.data===hoje());
+  lista.innerHTML="";
+  let total=0,ent=0;
 
-  const ops = getTodayOperational();
-  lista.innerHTML = "";
-
-  let total = 0;
-  let ag=0, rota=0, ent=0, can=0;
-
-  ops.forEach((o, i)=>{
-    total += o.amount;
-    if(o.status === "Aguardando") ag++;
-    if(o.status === "Em rota") rota++;
-    if(o.status === "Entregue") ent++;
-    if(o.status === "Cancelado") can++;
-
-    lista.innerHTML += `
-      <tr>
-        <td>${escapeHtml(o.customer)}<div class="muted">${escapeHtml(o.phone)}</div></td>
-        <td>${escapeHtml(o.orderText)}</td>
-        <td>R$ ${fmtMoney(o.amount)}</td>
-        <td><span class="badge ${o.status}">${o.status}</span></td>
-        <td>
-          <button class="btn-small btn-dark" ${closed ? "disabled" : ""} onclick="setStatus(${i},'Em rota')">Em rota 📲</button>
-          <button class="btn-small btn-dark" ${closed ? "disabled" : ""} onclick="setStatus(${i},'Entregue')">Entregue 📲</button>
-          <button class="btn-small btn-dark" ${closed ? "disabled" : ""} onclick="cancelOrder(${i})">Cancelar</button>
-          <button class="btn-small btn-danger" ${closed ? "disabled" : ""} onclick="deleteOrder(${i})">Excluir</button>
-        </td>
-      </tr>
-    `;
+  hojePedidos.forEach((p,i)=>{
+    total+=p.valor;
+    if(p.status==="Entregue")ent++;
+    lista.innerHTML+=`
+    <tr>
+      <td>${p.cliente}</td>
+      <td>${p.pedido}</td>
+      <td>R$ ${p.valor.toFixed(2).replace(".",",")}</td>
+      <td><span class="badge ${p.status}">${p.status}</span></td>
+      <td>
+        <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Em rota')">Em rota 📲</button>
+        <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Entregue')">Entregue 📲</button>
+      </td>
+    </tr>`;
   });
 
-  // KPIs
-  kPedidos.textContent = ops.length;
-  kTotal.textContent = fmtMoney(total);
-  kAg.textContent = ag;
-  kRota.textContent = rota;
-  kEnt.textContent = ent;
-  kCan.textContent = can;
-
-  resumo.textContent = closed
-    ? `Dia ${todayISO()} FECHADO — tela zerada e histórico salvo.`
-    : `Dia aberto — Total do dia: R$ ${fmtMoney(total)}.`;
+  kPedidos.innerText=hojePedidos.length;
+  kTotal.innerText=total.toFixed(2).replace(".",",");
+  kEnt.innerText=ent;
+  resumo.innerText=`Total do dia: R$ ${total.toFixed(2).replace(".",",")}`;
 }
-
-/* =========================
-   UTIL
-========================= */
-function downloadText(filename, text){
-  const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-}
-function cryptoId(){
-  // id simples e suficiente para uso local
-  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now();
-}
-function escapeHtml(s){
-  return String(s || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-/* =========================
-   INIT
-========================= */
-(function init(){
-  const t = todayISO();
-  dataPedido.value = t;
-  repIni.value = t;
-  repFim.value = t;
-
-  // ano atual
-  repAno.value = String(new Date().getFullYear());
-
-  // status default do dia se não existir
-  if(!dayStatus[t]) dayStatus[t] = "aberto";
-  saveAll();
-  render();
-})();
+render();
 </script>
+
 </body>
 </html>
-
