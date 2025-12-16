@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- PWA / MOBILE -->
+<!-- PWA -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#111111">
 <link rel="manifest" href="manifest.json">
@@ -17,40 +17,113 @@
   --cinza:#f2f2f2;
   --borda:#ddd;
   --ok:#0a8f3c;
-  --danger:#b00020;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:Segoe UI,Arial;background:var(--cinza)}
-header{background:var(--preto);color:#fff;padding:14px}
+body{
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:var(--cinza);
+}
+header{
+  background:var(--preto);
+  color:#fff;
+  padding:14px;
+}
 header span{color:var(--laranja)}
-.wrap{padding:14px;display:grid;grid-template-columns:1fr;gap:14px}
 
-.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.kpi{background:#fff;border-radius:10px;padding:10px;text-align:center;font-weight:800}
-.kpi small{display:block;font-weight:600;color:#666}
+.container{
+  padding:12px;
+  max-width:1100px;
+  margin:auto;
+}
 
-.card{background:#fff;border-radius:10px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.card h3{margin:0 0 10px;border-left:4px solid var(--laranja);padding-left:8px}
+/* DASHBOARD */
+.dashboard{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:8px;
+  margin-bottom:12px;
+}
+.kpi{
+  background:#fff;
+  border-radius:8px;
+  padding:10px;
+  text-align:center;
+  font-weight:700;
+}
+.kpi small{display:block;color:#666}
+
+/* CARD */
+.card{
+  background:#fff;
+  border-radius:8px;
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+.card h3{
+  margin:0 0 10px;
+  border-left:4px solid var(--laranja);
+  padding-left:8px;
+}
 
 label{font-size:12px;font-weight:700;color:#555}
-input{width:100%;padding:9px;margin:6px 0 10px;border:1px solid var(--borda);border-radius:6px}
+input{
+  width:100%;
+  padding:8px;
+  margin:5px 0 10px;
+  border:1px solid var(--borda);
+  border-radius:5px;
+}
 
-button{border:none;border-radius:6px;padding:9px;font-weight:800;cursor:pointer}
+button{
+  border:none;
+  border-radius:5px;
+  padding:8px;
+  font-weight:700;
+  cursor:pointer;
+}
 .btn-main{background:var(--laranja);color:#fff;width:100%}
 .btn-dark{background:var(--preto);color:#fff}
-.btn-danger{background:var(--danger);color:#fff}
 .btn-small{font-size:12px;margin:2px}
 
-table{width:100%;border-collapse:collapse}
-th{background:var(--preto);color:#fff;padding:8px;font-size:12px}
-td{padding:8px;border-bottom:1px solid var(--borda);font-size:12px}
+/* TABELA */
+.table-wrap{
+  overflow-x:auto;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:520px;
+}
+th{
+  background:var(--preto);
+  color:#fff;
+  padding:8px;
+  font-size:12px;
+}
+td{
+  padding:8px;
+  border-bottom:1px solid var(--borda);
+  font-size:12px;
+}
 
-.badge{padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.badge{
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+}
 .Aguardando{background:#eee}
 .Em\ rota{background:#ffe0c2;color:#b34700}
 .Entregue{background:#d4f7d4;color:#006400}
 
-.footer{background:#fff;border-radius:10px;padding:12px;font-weight:800}
+.footer{
+  background:#fff;
+  border-radius:8px;
+  padding:12px;
+  font-weight:700;
+}
 </style>
 </head>
 
@@ -60,14 +133,16 @@ td{padding:8px;border-bottom:1px solid var(--borda);font-size:12px}
   <h3>Delivery — <span>Drogaria Rocha</span></h3>
 </header>
 
-<div class="wrap">
+<div class="container">
 
+  <!-- DASHBOARD -->
   <div class="dashboard">
     <div class="kpi"><small>Pedidos</small><div id="kPedidos">0</div></div>
     <div class="kpi"><small>Total</small><div id="kTotal">0,00</div></div>
     <div class="kpi"><small>Entregues</small><div id="kEnt">0</div></div>
   </div>
 
+  <!-- FORM -->
   <div class="card">
     <h3>Novo Pedido</h3>
 
@@ -83,26 +158,29 @@ td{padding:8px;border-bottom:1px solid var(--borda);font-size:12px}
     <label>Pedido</label>
     <input id="pedido">
 
-    <label>Valor</label>
+    <label>Valor (R$)</label>
     <input id="valor">
 
     <button class="btn-main" onclick="addPedido()">Adicionar Pedido</button>
   </div>
 
+  <!-- LISTA -->
   <div class="card">
     <h3>Pedidos de Hoje</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Pedido</th>
-          <th>Valor</th>
-          <th>Status</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="lista"></tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Pedido</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="lista"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="footer" id="resumo"></div>
@@ -116,13 +194,15 @@ if("serviceWorker" in navigator){
 }
 
 /* DADOS */
-const STORAGE="rocha_delivery_final";
+const STORAGE="rocha_delivery_pwa";
 let pedidos=JSON.parse(localStorage.getItem(STORAGE))||[];
 
 function hoje(){return new Date().toISOString().split("T")[0]}
 dataPedido.value=hoje();
 
 function salvar(){localStorage.setItem(STORAGE,JSON.stringify(pedidos))}
+
+function fmt(v){return v.toFixed(2).replace(".",",")}
 
 function addPedido(){
   if(!cliente.value||!telefone.value||!pedido.value||!valor.value){
@@ -141,7 +221,7 @@ function addPedido(){
   salvar();render();
 }
 
-/* ✅ WHATSAPP APP NO CELULAR */
+/* WHATSAPP */
 function abrirWhats(p,tipo){
   let msg=tipo==="rota"
     ?`Olá ${p.cliente}! 👋 Seu pedido saiu para entrega 🚴‍♂️`
@@ -177,22 +257,22 @@ function render(){
     total+=p.valor;
     if(p.status==="Entregue")ent++;
     lista.innerHTML+=`
-    <tr>
-      <td>${p.cliente}</td>
-      <td>${p.pedido}</td>
-      <td>R$ ${p.valor.toFixed(2).replace(".",",")}</td>
-      <td><span class="badge ${p.status}">${p.status}</span></td>
-      <td>
-        <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Em rota')">Em rota 📲</button>
-        <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Entregue')">Entregue 📲</button>
-      </td>
-    </tr>`;
+      <tr>
+        <td>${p.cliente}</td>
+        <td>${p.pedido}</td>
+        <td>R$ ${fmt(p.valor)}</td>
+        <td><span class="badge ${p.status}">${p.status}</span></td>
+        <td>
+          <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Em rota')">Em rota 📲</button>
+          <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Entregue')">Entregue 📲</button>
+        </td>
+      </tr>`;
   });
 
   kPedidos.innerText=hojePedidos.length;
-  kTotal.innerText=total.toFixed(2).replace(".",",");
+  kTotal.innerText=fmt(total);
   kEnt.innerText=ent;
-  resumo.innerText=`Total do dia: R$ ${total.toFixed(2).replace(".",",")}`;
+  resumo.innerText=`Total do dia: R$ ${fmt(total)}`;
 }
 render();
 </script>
