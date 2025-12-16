@@ -2,12 +2,9 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-
-<!-- PWA -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#111111">
 <link rel="manifest" href="manifest.json">
-
 <title>Delivery | Drogaria Rocha</title>
 
 <style>
@@ -16,84 +13,40 @@
   --preto:#111;
   --cinza:#f2f2f2;
   --borda:#ddd;
-  --ok:#0a8f3c;
   --danger:#b00020;
+  --ok:#0a8f3c;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:Segoe UI,Arial;background:var(--cinza)}
 header{background:var(--preto);color:#fff;padding:14px}
 header span{color:var(--laranja)}
+.container{padding:12px;max-width:1200px;margin:auto}
 
-.container{padding:12px;max-width:1100px;margin:auto}
-
-/* DASHBOARD */
-.dashboard{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
-  gap:8px;
-  margin-bottom:12px;
-}
-.kpi{
-  background:#fff;
-  border-radius:8px;
-  padding:10px;
-  text-align:center;
-  font-weight:700;
-}
-.kpi small{display:block;color:#666}
-
-/* CARD */
 .card{
-  background:#fff;
-  border-radius:8px;
-  padding:14px;
-  margin-bottom:12px;
+  background:#fff;border-radius:8px;padding:14px;margin-bottom:12px;
   box-shadow:0 2px 6px rgba(0,0,0,.08);
 }
-.card h3{
-  margin:0 0 10px;
-  border-left:4px solid var(--laranja);
-  padding-left:8px;
-}
+.card h3{margin:0 0 10px;border-left:4px solid var(--laranja);padding-left:8px}
 
-label{font-size:12px;font-weight:700;color:#555}
-input{
-  width:100%;
-  padding:8px;
-  margin:5px 0 10px;
-  border:1px solid var(--borda);
-  border-radius:5px;
+input,select{
+  width:100%;padding:8px;margin:5px 0 10px;border:1px solid var(--borda);border-radius:6px;
 }
-
-button{
-  border:none;
-  border-radius:5px;
-  padding:8px;
-  font-weight:700;
-  cursor:pointer;
-}
+button{border:none;border-radius:6px;padding:8px;font-weight:700;cursor:pointer}
 .btn-main{background:var(--laranja);color:#fff;width:100%}
 .btn-dark{background:var(--preto);color:#fff}
 .btn-danger{background:var(--danger);color:#fff}
+.btn-ok{background:var(--ok);color:#fff}
 .btn-small{font-size:12px;margin:2px}
 
-/* TABELA */
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:620px}
+table{width:100%;border-collapse:collapse}
 th{background:var(--preto);color:#fff;padding:8px;font-size:12px}
 td{padding:8px;border-bottom:1px solid var(--borda);font-size:12px}
 
-.badge{
-  padding:4px 8px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:700;
-}
+.badge{padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700}
 .Aguardando{background:#eee}
 .Em\ rota{background:#ffe0c2;color:#b34700}
 .Entregue{background:#d4f7d4;color:#006400}
-
-.footer{background:#fff;border-radius:8px;padding:12px;font-weight:700}
+.Cancelado{background:#ffd6d6;color:#8b0000}
 </style>
 </head>
 
@@ -105,80 +58,63 @@ td{padding:8px;border-bottom:1px solid var(--borda);font-size:12px}
 
 <div class="container">
 
-  <!-- DASHBOARD -->
-  <div class="dashboard">
-    <div class="kpi"><small>Pedidos</small><div id="kPedidos">0</div></div>
-    <div class="kpi"><small>Total</small><div id="kTotal">0,00</div></div>
-    <div class="kpi"><small>Entregues</small><div id="kEnt">0</div></div>
-  </div>
+<!-- NOVO PEDIDO -->
+<div class="card">
+  <h3>Novo Pedido</h3>
+  <input type="date" id="dataPedido">
+  <input id="cliente" placeholder="Cliente">
+  <input id="telefone" placeholder="Telefone (somente números)">
+  <input id="pedido" placeholder="Pedido">
+  <input id="valor" placeholder="Valor">
+  <button class="btn-main" onclick="addPedido()">Adicionar Pedido</button>
+</div>
 
-  <!-- FORM -->
-  <div class="card">
-    <h3>Novo Pedido</h3>
+<!-- PEDIDOS -->
+<div class="card">
+  <h3>Pedidos do Dia</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Cliente</th><th>Pedido</th><th>Valor</th><th>Status</th><th>Ações</th>
+      </tr>
+    </thead>
+    <tbody id="lista"></tbody>
+  </table>
+</div>
 
-    <label>Data</label>
-    <input type="date" id="dataPedido">
+<!-- FECHAMENTO -->
+<div class="card">
+  <h3>Fechamento do Dia</h3>
+  <button class="btn-ok" onclick="fecharDia()">Fechar Dia</button>
+</div>
 
-    <label>Cliente</label>
-    <input id="cliente">
-
-    <label>Telefone (somente números)</label>
-    <input id="telefone">
-
-    <label>Pedido</label>
-    <input id="pedido">
-
-    <label>Valor (R$)</label>
-    <input id="valor">
-
-    <button class="btn-main" onclick="addPedido()">Adicionar Pedido</button>
-  </div>
-
-  <!-- LISTA -->
-  <div class="card">
-    <h3>Pedidos de Hoje</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Cliente</th>
-            <th>Pedido</th>
-            <th>Valor</th>
-            <th>Status</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="lista"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="footer" id="resumo"></div>
+<!-- RELATÓRIOS -->
+<div class="card">
+  <h3>Relatórios</h3>
+  <label>Período inicial</label>
+  <input type="date" id="repIni">
+  <label>Período final</label>
+  <input type="date" id="repFim">
+  <button class="btn-dark" onclick="relatorioPeriodo()">Gerar Relatório</button>
+</div>
 
 </div>
 
 <script>
-/* SERVICE WORKER */
 if("serviceWorker" in navigator){
   navigator.serviceWorker.register("service-worker.js");
 }
 
-/* DADOS */
-const STORAGE="rocha_delivery_pwa";
+const STORAGE="rocha_delivery_full";
 let pedidos=JSON.parse(localStorage.getItem(STORAGE))||[];
 
 function hoje(){return new Date().toISOString().split("T")[0]}
-dataPedido.value=hoje();
+dataPedido.value=hoje(); repIni.value=hoje(); repFim.value=hoje();
 
 function salvar(){localStorage.setItem(STORAGE,JSON.stringify(pedidos))}
-
-function fmt(v){return v.toFixed(2).replace(".",",")}
+function fmt(v){return Number(v).toFixed(2).replace(".",",")}
 
 function addPedido(){
-  if(!cliente.value||!telefone.value||!pedido.value||!valor.value){
-    alert("Preencha todos os campos");
-    return;
-  }
   pedidos.push({
     data:dataPedido.value,
     cliente:cliente.value,
@@ -188,56 +124,43 @@ function addPedido(){
     status:"Aguardando"
   });
   cliente.value=telefone.value=pedido.value=valor.value="";
-  salvar();render();
-}
-
-/* ✅ WHATSAPP BUSINESS FORÇADO */
-function abrirWhats(p,tipo){
-  let msg = tipo==="rota"
-    ?`Olá ${p.cliente}! 👋 Seu pedido saiu para entrega 🚴‍♂️`
-    :`Olá ${p.cliente}! 😊 Seu pedido foi entregue com sucesso ✅ Obrigado 🧡`;
-
-  const texto = encodeURIComponent(msg);
-  const tel = `55${p.telefone}`;
-  const isMobile = /Android/i.test(navigator.userAgent);
-
-  if(isMobile){
-    // FORÇA WHATSAPP BUSINESS
-    window.location.href =
-      `intent://send/?phone=${tel}&text=${texto}` +
-      `#Intent;scheme=whatsapp;package=com.whatsapp.w4b;end`;
-  }else{
-    window.location.href =
-      `https://web.whatsapp.com/send?phone=${tel}&text=${texto}`;
-  }
+  salvar(); render();
 }
 
 function mudarStatus(i,status){
   let hojePedidos=pedidos.filter(p=>p.data===hoje());
-  let p=hojePedidos[i];
-  let idx=pedidos.indexOf(p);
-  pedidos[idx].status=status;
-  salvar();render();
-  if(status==="Em rota")abrirWhats(p,"rota");
-  if(status==="Entregue")abrirWhats(p,"entregue");
+  pedidos[pedidos.indexOf(hojePedidos[i])].status=status;
+  salvar(); render();
 }
 
 function excluirPedido(i){
-  if(!confirm("Excluir este pedido?")) return;
+  if(!confirm("Excluir pedido?"))return;
   let hojePedidos=pedidos.filter(p=>p.data===hoje());
-  let p=hojePedidos[i];
-  pedidos.splice(pedidos.indexOf(p),1);
-  salvar();render();
+  pedidos.splice(pedidos.indexOf(hojePedidos[i]),1);
+  salvar(); render();
+}
+
+function fecharDia(){
+  alert("Dia fechado e salvo.");
+}
+
+function relatorioPeriodo(){
+  let ini=repIni.value,fim=repFim.value;
+  let lista=pedidos.filter(p=>p.data>=ini&&p.data<=fim);
+  let txt="RELATÓRIO\n\n";
+  lista.forEach(p=>{
+    txt+=`${p.data} | ${p.cliente} | ${p.pedido} | R$ ${fmt(p.valor)} | ${p.status}\n`;
+  });
+  let blob=new Blob([txt],{type:"text/plain"});
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="relatorio.txt";
+  a.click();
 }
 
 function render(){
-  let hojePedidos=pedidos.filter(p=>p.data===hoje());
   lista.innerHTML="";
-  let total=0,ent=0;
-
-  hojePedidos.forEach((p,i)=>{
-    total+=p.valor;
-    if(p.status==="Entregue")ent++;
+  pedidos.filter(p=>p.data===hoje()).forEach((p,i)=>{
     lista.innerHTML+=`
       <tr>
         <td>${p.cliente}</td>
@@ -245,17 +168,12 @@ function render(){
         <td>R$ ${fmt(p.valor)}</td>
         <td><span class="badge ${p.status}">${p.status}</span></td>
         <td>
-          <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Em rota')">Em rota 📲</button>
-          <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Entregue')">Entregue 📲</button>
+          <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Em rota')">Em rota</button>
+          <button class="btn-small btn-dark" onclick="mudarStatus(${i},'Entregue')">Entregue</button>
           <button class="btn-small btn-danger" onclick="excluirPedido(${i})">Excluir</button>
         </td>
       </tr>`;
   });
-
-  kPedidos.innerText=hojePedidos.length;
-  kTotal.innerText=fmt(total);
-  kEnt.innerText=ent;
-  resumo.innerText=`Total do dia: R$ ${fmt(total)}`;
 }
 render();
 </script>
